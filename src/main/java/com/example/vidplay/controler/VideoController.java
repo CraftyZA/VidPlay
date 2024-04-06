@@ -1,6 +1,5 @@
 package com.example.vidplay.controler;
 
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,12 +19,12 @@ public class VideoController {
 
     @GetMapping("/video/{videoName}")
     public ResponseEntity<StreamingResponseBody> streamVideo(@PathVariable String videoName) {
-        System.out.println(System.getProperty("user.dir"));
+        System.out.println(System.getProperty("user.dir") + "\\" + videoName);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDispositionFormData("attachment", videoName);
 
-        File videoFile = new File(videoName);
+        File videoFile = new File(System.getProperty("user.dir") + "\\" + videoName);
 
         StreamingResponseBody stream = out -> {
             try (InputStream inputStream = new FileInputStream(videoFile)) {
