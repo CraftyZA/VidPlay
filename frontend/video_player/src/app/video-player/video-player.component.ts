@@ -8,18 +8,17 @@ import { Observable } from 'rxjs';
   // styleUrls: ['./video-player.component.css']
 })
 export class VideoPlayerComponent implements OnInit {
-  // videoUrl: string;
+  videoUrl: string = '';
 
-  constructor(/*private http: HttpClient*/) { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
-
-    // this.fetchVideoUrl().subscribe(videoUrl => {
-    //   this.videoUrl = videoUrl;
-    // });
+    this.fetchVideoUrl().subscribe(blob => {
+      this.videoUrl = URL.createObjectURL(blob);
+    });
   }
 
-  // fetchVideoUrl(): Observable<string> {
-  //   return this.http.get('http://localhost:8082/video/5.mp4', { responseType: 'text' });
-  // }
+  fetchVideoUrl(): Observable<Blob> {
+    return this.http.get('http://localhost:8082/video/5.mkv', { responseType: 'blob' });
+  }
 }
