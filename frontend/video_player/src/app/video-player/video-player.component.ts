@@ -1,24 +1,46 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Component, OnInit, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-video-player',
   templateUrl: './video-player.component.html',
-  // styleUrls: ['./video-player.component.css']
 })
 export class VideoPlayerComponent implements OnInit {
   videoUrl: string = '';
 
-  constructor(private http: HttpClient) { }
+  constructor(private elementRef: ElementRef) { }
 
   ngOnInit(): void {
-    this.fetchVideoUrl().subscribe(blob => {
-      this.videoUrl = URL.createObjectURL(blob);
-    });
+    this.videoUrl = this.fetchVideoUrl();
   }
 
-  fetchVideoUrl(): Observable<Blob> {
-    return this.http.get('http://localhost:8082/video/5.mkv', { responseType: 'blob' });
+  fetchVideoUrl(): string {
+    //Placeholder. This will eventually be handled by the backend.
+    return 'https://www.zwarries96.co.za/sample.mp4';
+  }
+
+  toggleFullscreen(): void {
+    const videoContainer = this.elementRef.nativeElement.querySelector('#videoContainer');
+    const videoPlayer = this.elementRef.nativeElement.querySelector('#videoPlayer');
+
+    if (videoContainer.requestFullscreen) {
+      videoContainer.requestFullscreen();
+    } else if (videoContainer.mozRequestFullScreen) { /* Firefox */
+      videoContainer.mozRequestFullScreen();
+    } else if (videoContainer.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+      videoContainer.webkitRequestFullscreen();
+    } else if (videoContainer.msRequestFullscreen) { /* IE/Edge */
+      videoContainer.msRequestFullscreen();
+    }
+
+    if (videoPlayer.requestFullscreen) {
+      videoPlayer.requestFullscreen();
+    } else if (videoPlayer.mozRequestFullScreen) { /* Firefox */
+      videoPlayer.mozRequestFullScreen();
+    } else if (videoPlayer.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+      videoPlayer.webkitRequestFullscreen();
+    } else if (videoPlayer.msRequestFullscreen) { /* IE/Edge */
+      videoPlayer.msRequestFullscreen();
+    }
   }
 }
+
