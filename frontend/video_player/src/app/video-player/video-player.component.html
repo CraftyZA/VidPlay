@@ -1,6 +1,16 @@
-<div #videoContainer (dblclick)="toggleFullscreen()">
-  <p>Video player</p>
-  <video #videoPlayer controls [src]="videoUrl" type="video/mp4">
+<!--<div #videoContainer (dblclick)="toggleFullscreen()">-->
+<!--  <p>Video player</p>-->
+<!--  <video #videoPlayer controls [src]="videoUrl" type="video/mp4">-->
+<!--    Your browser does not support the video tag.-->
+<!--  </video>-->
+<!--</div>-->
+
+
+<div>
+  <p>Video Player</p>
+  <video controls>
+    <source [src]="videoSource$" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 </div>
+

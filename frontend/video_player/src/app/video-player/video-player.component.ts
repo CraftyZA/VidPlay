@@ -1,46 +1,44 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, OnDestroy } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import {catchError, Observable, of, Subscription} from 'rxjs';
+
+
+interface VideoPathRequest {
+  path: string;
+}
 
 @Component({
   selector: 'app-video-player',
   templateUrl: './video-player.component.html',
 })
-export class VideoPlayerComponent implements OnInit {
-  videoUrl: string = '';
+export class VideoPlayerComponent implements OnInit, OnDestroy {
+  videoSource$: Observable<null | ArrayBuffer>;
+  subscription: Subscription | undefined;
 
-  constructor(private elementRef: ElementRef) { }
+  constructor(private elementRef: ElementRef, private http: HttpClient) {
+    this.videoSource$ = of(null);
+    console.log(this.http);
+  }
 
   ngOnInit(): void {
-    this.videoUrl = this.fetchVideoUrl();
+    this.fetchVideo();
   }
 
-  fetchVideoUrl(): string {
-    //Placeholder. This will eventually be handled by the backend.
-    return 'https://www.zwarries96.co.za/sample.mp4';
+  fetchVideo(): void {
+    const videoPathRequest: VideoPathRequest = { path: 'd:\\test\\movies\\the jazz singer.avi' };
+
+    this.videoSource$ = this.http.post<ArrayBuffer>('http://localhost:8082/media/stream', videoPathRequest, { responseType: 'json' })
+      .pipe(
+        catchError(error => {
+          console.error('Error fetching video:', error);
+          return of(null);
+        })
+      );
   }
 
-  toggleFullscreen(): void {
-    const videoContainer = this.elementRef.nativeElement.querySelector('#videoContainer');
-    const videoPlayer = this.elementRef.nativeElement.querySelector('#videoPlayer');
-
-    if (videoContainer.requestFullscreen) {
-      videoContainer.requestFullscreen();
-    } else if (videoContainer.mozRequestFullScreen) { /* Firefox */
-      videoContainer.mozRequestFullScreen();
-    } else if (videoContainer.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-      videoContainer.webkitRequestFullscreen();
-    } else if (videoContainer.msRequestFullscreen) { /* IE/Edge */
-      videoContainer.msRequestFullscreen();
-    }
-
-    if (videoPlayer.requestFullscreen) {
-      videoPlayer.requestFullscreen();
-    } else if (videoPlayer.mozRequestFullScreen) { /* Firefox */
-      videoPlayer.mozRequestFullScreen();
-    } else if (videoPlayer.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-      videoPlayer.webkitRequestFullscreen();
-    } else if (videoPlayer.msRequestFullscreen) { /* IE/Edge */
-      videoPlayer.msRequestFullscreen();
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
     }
   }
 }
-
