@@ -1,6 +1,7 @@
 package com.example.vidplay.media;
 
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @RestController
+@Slf4j
 @RequestMapping("/media")
 public class MediaController {
 
@@ -23,7 +25,7 @@ public class MediaController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(mediaService.getMediaType(path)));
         headers.setContentLength(mediaService.getMediaFileSize(path));
-
+        log.debug("HEADERS:" + headers);
         byte[] mediaBytes = mediaService.getMediaBytes(path);
 
         response.getOutputStream().write(mediaBytes);

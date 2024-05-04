@@ -12,7 +12,9 @@ import java.nio.file.Path;
 public class MediaService {
 
     public byte[] getMediaBytes(String fileName) throws IOException {
+        log.info("Streaming " + fileName);
         Path filePath = Path.of(fileName);
+        log.debug("Sending Bytes for " + filePath);
         return Files.readAllBytes(filePath);
     }
 

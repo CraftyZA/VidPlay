@@ -7,7 +7,6 @@ import { VideoPlayerComponent } from './video-player/video-player.component';
 @NgModule({
   declarations: [
     VideoPlayerComponent,
-
   ],
   imports: [
     BrowserModule,
